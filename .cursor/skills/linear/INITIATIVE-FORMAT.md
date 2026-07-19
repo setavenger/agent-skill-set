@@ -14,7 +14,7 @@ Copy the template below into the initiative `description` when calling `save_ini
 
 - Name the initiative after the **thing contained** (engagement, suite, surface) — not after a single feature.
 - Do **not** require nested initiatives. Flat only unless the user explicitly asks otherwise.
-- Adding projects later is expected. Do not treat a missing future project as a planning failure.
+- **Rolling projects (agent rule, not a description section):** new projects are added as needs appear. Do not require a pre-declared roster, and do not paste Linear's project list into the description — linked projects already show that.
 
 ## Tone — mission, not milestone plan
 
@@ -24,6 +24,7 @@ It should orient a new reader (human or agent) so they know whether a new projec
 
 - Pretend the full project roster is known
 - Require every future feature to be listed before work starts
+- Duplicate the initiative's project list (Linear already shows linked projects)
 - Mirror project/issue templates (Goal · Reasoning · Effect · Design · Implementation · …)
 - Sound like a sprint plan or a "definition of done" for the whole container
 
@@ -44,15 +45,11 @@ Use these headings when they fit. Merge, reorder, or skip with a short note when
 
 ## What belongs here
 
-{Kinds of work that belong under this initiative. Boundaries vs adjacent initiatives if useful. Keep loose — examples of themes, not a locked backlog.}
+{Kinds of work that belong under this initiative. Boundaries vs adjacent initiatives if useful. Keep loose — themes and boundaries, not a backlog.}
 
-## How this evolves
+## How the pieces fit
 
-{Explicit: projects are added on a rolling basis as needs appear (e.g. requested features). Scope is not cleared in advance. Do not rewrite Mission into a closed checklist when a new project lands — add the project and, if useful, a line under Landscape.}
-
-## Landscape
-
-{Optional living snapshot of notable active or recent projects — orientation only, not completion criteria. OK to be incomplete. Or: "See linked projects in Linear."}
+{Optional. Only when several projects already interact and a reader needs the map: how major pieces relate, what depends on what, shared domain seams. Prose or a small relationship sketch — not a roster of project names. Skip entirely if Linear's project list is enough.}
 
 ## Notes
 
@@ -68,8 +65,7 @@ Not mandatory. Use when they add signal:
 | **Mission** | Always — core of the description |
 | **Context** | External party, domain jargon, or multi-repo suite needs grounding |
 | **What belongs here** | Risk of dumping unrelated work into the wrong initiative |
-| **How this evolves** | Agents keep trying to "finish" the initiative by listing all projects |
-| **Landscape** | Several projects already exist and readers need a map |
+| **How the pieces fit** | Multiple projects interact and the *relationships* are non-obvious |
 | **Stakeholders / contacts** | Non-obvious owners or external points of contact |
 | **Systems at a glance** | Suite spans many repos; one short list, detail stays on projects |
 | **Non-goals for the container** | Whole classes of work live elsewhere (another initiative) |
@@ -79,7 +75,8 @@ Not mandatory. Use when they add signal:
 
 - Overwriting a rich description with a one-line summary
 - Copying [PROJECT-FORMAT.md](./PROJECT-FORMAT.md) wholesale onto the initiative
-- "Goal: complete all projects listed below" + a checklist that must stay exhaustive
+- Listing all (or most) projects in the description — that duplicates Linear
+- "Goal: complete all projects listed below" + an exhaustive checklist
 - Treating initiative status **Completed** as soon as one project ships (initiative outlives individual features)
 - Creating one initiative per feature (that is a **project**)
 
@@ -98,20 +95,12 @@ Built for a plant-nursery operation that needs reliable records across crews and
 
 Features and fixes that advance run logging, related operational records, and the supporting apps/services for this surface. Generic platform work that many suites will share belongs in its own initiative or project, linked from here when needed.
 
-## How this evolves
-
-New projects appear as needs are requested or discovered. There is no requirement to pre-declare every project. When a new feature is large enough to outgrow a single issue (and its sub-issues), add a **project** under this initiative.
-
-## Landscape
-
-See linked projects in Linear. Snapshot when useful; not a closed roadmap.
-
 ## Notes
 
 Prior planning notes may live in older docs or the former mega-project description — prefer linked projects + ADRs for active technical truth.
 ```
 
-## Example — product suite
+## Example — suite with interacting pieces
 
 ```md
 ## Mission
@@ -126,14 +115,9 @@ Multiple apps touch billing data. This initiative is the home for that theme so 
 
 Invoicing, payment capture, billing admin, and billing-specific integrations. Unrelated growth/marketing work stays out.
 
-## How this evolves
+## How the pieces fit
 
-Projects are added when a feature is scoped. The initiative does not need a fixed end-state project list.
-
-## Landscape
-
-- Invoice line-item correctness (api-service)
-- (add rows as projects appear)
+Invoicing writes the source of truth; payment capture settles against those invoices; operator tools read both. Shared money/domain types should stay consistent across those seams — contracts live on the relevant projects' ADRs, not here.
 
 ## Notes
 
@@ -147,5 +131,5 @@ Before `save_initiative` (create or major rewrite):
 1. **Mission** (or equivalent prose) explains the overarching container — not one feature.
 2. Description is richer than `summary` alone when prior context exists; do not clobber richer text without user intent.
 3. No forced Goal / Reasoning / Effect / Implementation scaffold unless the user asks for it.
-4. Evolution is acknowledged: rolling projects, not a pre-cleared checklist.
+4. No project roster pasted into the description — use Linear's linked projects for that.
 5. Flat: no parent initiative unless the user explicitly wants nesting.
