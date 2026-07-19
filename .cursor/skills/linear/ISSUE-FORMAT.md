@@ -18,6 +18,7 @@ Don't duplicate content across layers. Link up, implement down.
 
 | Layer | Where | Holds |
 |-------|-------|-------|
+| Overarching scope | **Initiative** ([INITIATIVE-FORMAT.md](./INITIATIVE-FORMAT.md)) | Mission, context, what belongs in the container |
 | Feature rationale | **Project** ([PROJECT-FORMAT.md](./PROJECT-FORMAT.md)) | Goal, Reasoning, Effect, rollout, status, ADR index |
 | Cross-repo design | **Linear Document** (ADR) | Context, Decision, Contract, Consequences |
 | Repo execution | **Issue** (this template) | Repo-local why, effect, design links, implementation plan, verification |

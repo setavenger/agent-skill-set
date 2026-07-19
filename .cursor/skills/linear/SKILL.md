@@ -1,6 +1,6 @@
 ---
 name: linear
-description: Manage Linear issues, projects, and workflows. Use when creating or updating Linear issues, triaging work, routing tasks to repos, choosing labels, writing structured project descriptions or issue descriptions, creating cross-repo Linear Document ADRs, naming git branches, setting up a brand-new Linear project for a previously-undocumented feature, or coordinating cloud agents against Linear tickets.
+description: Manage Linear initiatives, projects, issues, and workflows. Use when creating or updating Linear initiatives/projects/issues, triaging work, routing tasks to repos, choosing labels, writing structured initiative/project/issue descriptions, creating cross-repo Linear Document ADRs, naming git branches, setting up a brand-new Linear project for a previously-undocumented feature, or coordinating cloud agents against Linear tickets.
 ---
 
 # Linear
@@ -16,25 +16,38 @@ If the user has not specified a team, ask or infer from project context. Do not 
 ## Hierarchy
 
 ```
-Team → Project → Milestone (optional) → Issue
+Initiative → Project → Milestone (optional) → Issue
 ```
 
-- **Project** = product or initiative (e.g. "Notification Platform", "Billing v2").
+Teams still own issues (IDs like `ENG-15`). Initiatives and projects organize work above that.
+
+- **Initiative** = top-level container for an overarching scope (customer engagement, product suite, long-lived surface). Projects roll in over time — not a closed checklist. See [INITIATIVE-FORMAT.md](./INITIATIVE-FORMAT.md).
+- **Project** = feature or delivery effort inside an initiative (e.g. "Harvest log export", "Subscription digests").
 - **Milestone** = delivery slice inside a project (e.g. "Data model foundations", "Digest email").
 - **Issue** = one unit of work with a single primary repo.
 
-Every issue should have a **project**. Add a **milestone** when the project uses them.
+Every issue should have a **project**. Attach projects to an **initiative** when the work belongs to an existing scope. Add a **milestone** when the project uses them. Do not nest initiatives unless the user explicitly asks.
+
+## Initiative setup
+
+When work belongs to a customer engagement, product suite, or other long-lived scope:
+
+1. **Find or create the initiative** (`list_initiatives` / `save_initiative`). Description follows [INITIATIVE-FORMAT.md](./INITIATIVE-FORMAT.md) — mission and context, not the project Goal/Reasoning scaffold.
+2. **Do not** require a complete project list up front. Initiatives collect projects as features are requested or discovered.
+3. **Do not** overwrite a rich initiative description with a one-line stub. If cleaning up a mega-project into an initiative, preserve substance; tighten structure, don't empty it.
+4. Flat initiatives only unless the user asks for nesting.
 
 ## Project setup (new / previously-undocumented feature)
 
 Before creating a single issue for a large feature that has never lived in Linear (e.g. migrating scattered markdown docs into a real project):
 
-1. **Write the project description first** using the fixed template in [PROJECT-FORMAT.md](./PROJECT-FORMAT.md). Eight sections: Goal · Reasoning · Effect · Design · Implementation · Current status · Out of scope · Source documents (with sub-sections per template). Get it reviewed/confirmed by the user before creating any issues — issues built against an unconfirmed description need rework. Issues carry repo-local **Reasoning** and **Effect**; the project holds initiative-level why, effect, and rollout.
-2. **Only then create issues** per [ISSUE-FORMAT.md](./ISSUE-FORMAT.md). Don't rush to issue creation to "make progress" — issues are cheap to fix, but a wrong-scoped batch of them is not.
-3. **Project vs. milestone** — decide per sub-piece:
+1. **Confirm the parent initiative** when one exists (or create it first per above). The project is the feature; the initiative is the container.
+2. **Write the project description first** using the fixed template in [PROJECT-FORMAT.md](./PROJECT-FORMAT.md). Eight sections: Goal · Reasoning · Effect · Design · Implementation · Current status · Out of scope · Source documents (with sub-sections per template). Get it reviewed/confirmed by the user before creating any issues — issues built against an unconfirmed description need rework. Issues carry repo-local **Reasoning** and **Effect**; the project holds feature-level why, effect, and rollout.
+3. **Only then create issues** per [ISSUE-FORMAT.md](./ISSUE-FORMAT.md). Don't rush to issue creation to "make progress" — issues are cheap to fix, but a wrong-scoped batch of them is not.
+4. **Project vs. milestone** — decide per sub-piece:
    - Standalone, reusable infrastructure that other work also consumes — even if you only discovered it as a dependency of this feature — gets its own **project**, not a milestone. Link the two projects with an issue-level `blockedBy` relation; don't nest one inside the other.
    - A themed phase or slice of the *same* feature (e.g. "data model" vs. "UI" vs. "email delivery"; "ships now, no dependency" vs. "blocked on X") is a **milestone** inside the same project.
-4. **Prefer granular issues over a few big ones** once the project/milestone structure exists. Split a vague "fix the whole workflow" bucket into one issue per concrete, independently-shippable change. Linear's relations, milestones, and labels are built to handle many small issues cheaply — a wall-of-text single issue is not more efficient, it's just less visible.
+5. **Prefer granular issues over a few big ones** once the project/milestone structure exists. Split a vague "fix the whole workflow" bucket into one issue per concrete, independently-shippable change. Linear's relations, milestones, and labels are built to handle many small issues cheaply — a wall-of-text single issue is not more efficient, it's just less visible.
 
 ## Issue workflow (status)
 
@@ -197,15 +210,23 @@ Nine sections, always: Goal · Reasoning · Effect · Design · Implementation �
 
 Each issue answers **why** (Reasoning), **how** (Design + Implementation), and **what effect** (Effect). Cross-repo contracts live in a **Linear Document on the project**, not in issue bodies — issues link the doc in **Design**.
 
+## Creating initiatives
+
+1. Confirm whether an initiative already exists (`list_initiatives`) before creating another for the same scope.
+2. Fill description from [INITIATIVE-FORMAT.md](./INITIATIVE-FORMAT.md) — mission/context; not the project template.
+3. Set `summary` to a one-line orientation; put real substance in `description`.
+4. Attach new feature **projects** to this initiative as they appear — no need to pre-create the full set.
+
 ## Creating projects
 
-Before creating issues on a new initiative:
+Before creating issues on a new feature project:
 
 1. Confirm **team** via `list_teams` or user input.
-2. Fill project description from [PROJECT-FORMAT.md](./PROJECT-FORMAT.md) — validate all sections and three questions (why / how / effect).
-3. **User confirmation required** before creating any issues.
-4. Cross-repo? → `save_document` ADRs on project first → index in **Design § Architecture documents**.
-5. Set domain labels on project when applicable.
+2. Confirm **initiative** when the work belongs to an existing scope (`list_initiatives` / `get_initiative`). Attach via `save_project` `addInitiatives` / `setInitiatives`.
+3. Fill project description from [PROJECT-FORMAT.md](./PROJECT-FORMAT.md) — validate all sections and three questions (why / how / effect).
+4. **User confirmation required** before creating any issues.
+5. Cross-repo? → `save_document` ADRs on project first → index in **Design § Architecture documents**.
+6. Set domain labels on project when applicable.
 
 ## Creating issues
 
@@ -245,7 +266,7 @@ When a cloud agent works a ticket:
 
 1. Read issue via `get_issue` (ID like `ENG-15`).
 2. Read **Reasoning** → **Design** → **Implementation** → **Effect**. Fetch linked Linear Document via `get_document` (from **Design**) or repo ADR. Implement against shared docs — not against sibling issue text.
-3. Read the **project** description ([PROJECT-FORMAT.md](./PROJECT-FORMAT.md)) → **Implementation § Git branches** for this repo's integration branch; **Reasoning** / **Effect** for initiative context.
+3. Read the **project** description ([PROJECT-FORMAT.md](./PROJECT-FORMAT.md)) → **Implementation § Git branches** for this repo's integration branch; **Reasoning** / **Effect** for feature context. Skim the parent **initiative** ([INITIATIVE-FORMAT.md](./INITIATIVE-FORMAT.md)) for overarching scope when present.
 4. Check repo label → clone/checkout the matching repo.
 5. Checkout the **integration branch** (create from `main` if missing and project is multi-issue).
 6. Create issue branch from integration branch: `cursor/{desc}-{4hex}` (cloud agents). Include Linear issue key in commit/PR body even if not in branch name.
@@ -278,9 +299,10 @@ See also [subagent-orchestration](../subagent-orchestration/SKILL.md) for genera
 | Get one issue | `get_issue` |
 | Create/update issue | `save_issue` |
 | Comment | `save_comment` |
-| Projects | `list_projects`, `get_project` |
+| Initiatives | `list_initiatives`, `get_initiative`, `save_initiative` |
+| Projects | `list_projects`, `get_project`, `save_project` |
 | Shared ADRs / contracts | `list_documents`, `get_document`, `save_document` |
-| Labels | `list_issue_labels` |
+| Labels | `list_issue_labels`, `list_initiative_labels` |
 | Statuses | `list_issue_statuses` |
 | Teams | `list_teams` |
 
@@ -288,6 +310,7 @@ Always call `GetMcpTools` before first MCP use in a session.
 
 ## More detail
 
+- **Initiative template:** [INITIATIVE-FORMAT.md](./INITIATIVE-FORMAT.md)
 - **Project template (mandatory):** [PROJECT-FORMAT.md](./PROJECT-FORMAT.md)
 - **Issue template (mandatory):** [ISSUE-FORMAT.md](./ISSUE-FORMAT.md)
 - **Cross-repo ADRs / contracts:** [CROSS-REPO-ADR.md](./CROSS-REPO-ADR.md)

@@ -1,6 +1,8 @@
 # Project description format
 
-**Every project description must use this structure** when setting up a new initiative or migrating undocumented work into Linear. Agents must not write free-form blurbs. If a section does not apply, write `N/A` — do not omit the heading.
+**Every project description must use this structure** when setting up a new feature project or migrating undocumented work into Linear. Agents must not write free-form blurbs. If a section does not apply, write `N/A` — do not omit the heading.
+
+A **project** is a feature or delivery effort under an **initiative** (see [INITIATIVE-FORMAT.md](./INITIATIVE-FORMAT.md)). Do not use this template for initiative descriptions.
 
 Copy the template below into the project `description` when calling `save_project` (or equivalent update). Fill every section. **Get user confirmation before creating issues** — issues built against an unconfirmed project description need rework.
 
@@ -14,15 +16,16 @@ Copy the template below into the project `description` when calling `save_projec
 
 ## Layering — what belongs where
 
-Don't duplicate content across layers. Project sets direction; ADRs hold contracts; issues execute.
+Don't duplicate content across layers. Initiative orients the container; project sets feature direction; ADRs hold contracts; issues execute.
 
 | Layer | Where | Holds |
 |-------|-------|-------|
-| Initiative | **Project** (this template) | Why, what ships, connected systems, rollout, status |
+| Overarching scope | **Initiative** ([INITIATIVE-FORMAT.md](./INITIATIVE-FORMAT.md)) | Mission, context, what belongs in the container |
+| Feature | **Project** (this template) | Why, what ships, connected systems, rollout, status |
 | Cross-repo design | **Linear Document** (ADR) | Context, Decision, Contract, Consequences |
 | Repo execution | **Issue** ([ISSUE-FORMAT.md](./ISSUE-FORMAT.md)) | Repo-local why, effect, design links, build plan |
 
-Project **Reasoning** = why the *initiative* exists — not repeated in every issue.
+Project **Reasoning** = why *this feature* exists — not a repeat of the whole initiative mission.
 Project **Design** = architecture overview + ADR links — not full API schemas (those live in ADRs).
 Project **Implementation** = rollout order and milestone plan — not per-file touch points (those live in issues).
 
@@ -35,14 +38,14 @@ Project **Implementation** = rollout order and milestone plan — not per-file t
 
 ## Reasoning
 
-{Why this initiative exists. 3–6 sentences: problem, who is affected, why now, what happens if we don't build it.}
+{Why this feature/project exists. 3–6 sentences: problem, who is affected, why now, what happens if we don't build it. Link the parent initiative for overarching scope.}
 
 - Stakeholders: {teams, users, or N/A}
 - Alternatives considered: {what we rejected and why, or N/A}
 
 ## Effect
 
-{What changes when this project ships — initiative-level impact.}
+{What changes when this project ships — feature-level impact.}
 
 - Users / product: {who benefits, what they can do, or N/A}
 - System / platform: {new capabilities, deprecations, or N/A}
@@ -51,7 +54,7 @@ Project **Implementation** = rollout order and milestone plan — not per-file t
 
 ## Design
 
-{Architecture at initiative level — overview, not full contracts.}
+{Architecture at feature/project level — overview, not full contracts.}
 
 ### Overview
 
@@ -142,10 +145,11 @@ Or N/A for a single-issue project.
 - **Git branches** = integration branch table per repo.
 - Per-file touch points, handler details → issues only.
 
-### Effect is initiative-level
+### Effect is feature-level
 
 - Good: "Users receive daily digest emails for subscribed feeds; notification center shows unread items."
 - Bad: Checkbox acceptance criteria (those belong in issues).
+- Bad: Restating the whole parent initiative mission.
 
 ### Status stays current
 
@@ -156,12 +160,13 @@ Revisit **Current status** and **Git branches** as work progresses — not a one
 | Situation | Use |
 |-----------|-----|
 | Phase of the same feature (data model → UI → email) | **Milestone** inside this project |
-| Reusable infra other initiatives will also consume | **Separate project** + `blockedBy` link |
+| Reusable infra other features/initiatives will also consume | **Separate project** + `blockedBy` link |
 | Single isolated change | Short project or existing project; may skip rollout table |
+| New feature under an existing engagement/suite | **Project** under that **initiative** — do not invent a new initiative per feature |
 
 ## Labels
 
-Apply domain labels at project level when the initiative spans multiple repos. Discover via `list_issue_labels` — names vary by workspace.
+Apply domain labels at project level when the feature spans multiple repos. Discover via `list_issue_labels` — names vary by workspace.
 
 Issue-level repo + type labels still apply per [ISSUE-FORMAT.md](./ISSUE-FORMAT.md).
 
@@ -318,7 +323,7 @@ Frontend display formatting, PDF export.
 Agent must confirm:
 
 1. All eight sections present (or explicit `N/A` in sub-bullets where noted).
-2. **Reasoning**, **Effect**, **Design**, and **Implementation** answer initiative-level questions — not copy-pasted from a single issue draft.
+2. **Reasoning**, **Effect**, **Design**, and **Implementation** answer feature/project-level questions — not copy-pasted from a single issue draft, and not a dump of the parent initiative mission.
 3. User has confirmed the project description.
 4. Cross-repo work → ADRs exist and are indexed in **Design § Architecture documents**.
 5. **Git branches** table matches repos in **Connected systems & repos**.
