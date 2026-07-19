@@ -23,12 +23,13 @@ If only one repo is involved → repo-local ADR or `N/A` in the issue. Do not cr
 ## Document hierarchy
 
 ```
-Project (e.g. Notification Platform)
-├── Linear Document: ADR-0042 Subscription API     ← shared truth
-├── Linear Document: ADR-0043 Dedupe strategy      ← optional second doc
-├── Issue ENG-15 (api-service)  → links ADR-0042 only
-├── Issue ENG-16 (worker)         → links ADR-0042 only
-└── Issue ENG-17 (web-app)        → links ADR-0042 only
+Initiative (e.g. Billing Suite)          ← mission/container; not ADR home
+└── Project (e.g. Subscription digests)  ← feature; ADRs attach here
+    ├── Linear Document: ADR-0042 Subscription API     ← shared truth
+    ├── Linear Document: ADR-0043 Dedupe strategy      ← optional second doc
+    ├── Issue ENG-15 (api-service)  → links ADR-0042 only
+    ├── Issue ENG-16 (worker)         → links ADR-0042 only
+    └── Issue ENG-17 (web-app)        → links ADR-0042 only
 ```
 
 **Never** attach the canonical contract to an issue (`parent: issue`). Always attach to the **project** so it is not "owned" by one repo's ticket.

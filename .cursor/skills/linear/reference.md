@@ -1,6 +1,6 @@
 # Linear workspace reference
 
-How to discover workspace-specific conventions at runtime. **Do not assume** team names, repo labels, or project names — fetch them from Linear MCP.
+How to discover workspace-specific conventions at runtime. **Do not assume** team names, repo labels, initiative names, or project names — fetch them from Linear MCP.
 
 ## Discover first
 
@@ -8,7 +8,8 @@ How to discover workspace-specific conventions at runtime. **Do not assume** tea
 |------|------|-------|
 | Teams | `list_teams` | Team key (e.g. `ENG`) prefixes issue IDs |
 | Issue labels | `list_issue_labels` | Find `repo` parent group and domain labels |
-| Projects | `list_projects` | Live project list with descriptions |
+| Initiatives | `list_initiatives` | Top-level containers (engagement / suite / surface) |
+| Projects | `list_projects` | Feature projects; often under an initiative |
 | Statuses | `list_issue_statuses` | Workflow states per team |
 | Documents | `list_documents` | Project-level ADRs and contracts |
 
@@ -24,7 +25,7 @@ There is no equivalent label group for `branch` — branch routing goes through 
 
 ## Domain / platform labels
 
-Apply when the initiative spans themes or platforms. Discover via `list_issue_labels` — names vary by workspace. Examples of what teams often use:
+Apply when work spans themes or platforms across projects. Discover via `list_issue_labels` — names vary by workspace. Examples of what teams often use:
 
 | Label type | Typical purpose |
 |------------|-----------------|
@@ -104,6 +105,7 @@ Linear triggers **one repo per issue**. Cross-repo features need three layers:
 
 | Layer | Where | Contains |
 |-------|-------|----------|
+| Overarching scope | Initiative ([INITIATIVE-FORMAT.md](./INITIATIVE-FORMAT.md)) | Mission, context, container boundaries |
 | Feature why | Project ([PROJECT-FORMAT.md](./PROJECT-FORMAT.md)) | Goal, Reasoning, Effect, rollout, ADR index, status |
 | Architecture | Project Linear Document | Context, Decision, Contract, Consequences |
 | Issue (per repo) | Linear issue | Goal, Reasoning, Effect, Design (links), Implementation, acceptance criteria |
